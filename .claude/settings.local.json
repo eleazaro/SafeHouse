@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcopy:*)",
+      "Bash(robocopy:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(flutter pub get:*)",
+      "Bash(dart analyze:*)",
+      "Bash(ls -la \"d:\\\\git\\\\SafeHouse\\\\assets\"\" 2>&1 || echo \"Assets directory check \")"
+    ]
+  }
+}
