@@ -34,7 +34,7 @@ class MockPropertyRepository implements PropertyRepository {
   static final List<Property> _properties = [
     const Property(
       id: '1',
-      title: 'Lumina Apartment',
+      title: 'Edifício Lumina',
       address: 'Rua das Flores, 120',
       city: 'São Paulo',
       state: 'SP',
@@ -43,16 +43,19 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 3200,
       type: PropertyType.apartment,
       brokeragePercent: 9,
-      imageUrls: ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800',
+      ],
       bedrooms: 2,
       bathrooms: 1,
       areaSqm: 68,
-      description: 'Apartamento moderno com acabamento premium, próximo ao metrô.',
+      description:
+          'Apartamento moderno com acabamento premium, próximo ao metrô.',
       amenities: ['Piscina', 'Academia', 'Churrasqueira', 'Vaga de garagem'],
     ),
     const Property(
       id: '2',
-      title: 'Vibe Apartment',
+      title: 'Residencial Vibe',
       address: 'Av. Paulista, 1500',
       city: 'São Paulo',
       state: 'SP',
@@ -61,7 +64,9 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 4800,
       type: PropertyType.apartment,
       brokeragePercent: 12,
-      imageUrls: ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800',
+      ],
       bedrooms: 3,
       bathrooms: 2,
       areaSqm: 95,
@@ -79,16 +84,19 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 6500,
       type: PropertyType.house,
       brokeragePercent: 8,
-      imageUrls: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+      ],
       bedrooms: 4,
       bathrooms: 3,
       areaSqm: 180,
-      description: 'Casa em condomínio fechado com amplo jardim e área gourmet.',
+      description:
+          'Casa em condomínio fechado com amplo jardim e área gourmet.',
       amenities: ['Jardim', 'Área gourmet', 'Segurança 24h', '3 vagas'],
     ),
     const Property(
       id: '4',
-      title: 'Urban Studio',
+      title: 'Studio Urbano',
       address: 'Rua Augusta, 800',
       city: 'São Paulo',
       state: 'SP',
@@ -97,7 +105,9 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 1800,
       type: PropertyType.studio,
       brokeragePercent: 10,
-      imageUrls: ['https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
+      ],
       bedrooms: 1,
       bathrooms: 1,
       areaSqm: 35,
@@ -106,7 +116,7 @@ class MockPropertyRepository implements PropertyRepository {
     ),
     const Property(
       id: '5',
-      title: 'Horizonte Tower',
+      title: 'Torre Horizonte',
       address: 'Av. Brigadeiro Faria Lima, 2000',
       city: 'São Paulo',
       state: 'SP',
@@ -115,11 +125,14 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 5200,
       type: PropertyType.apartment,
       brokeragePercent: 9,
-      imageUrls: ['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
+      ],
       bedrooms: 3,
       bathrooms: 2,
       areaSqm: 110,
-      description: 'Apartamento de alto padrão com varanda gourmet e vista livre.',
+      description:
+          'Apartamento de alto padrão com varanda gourmet e vista livre.',
       amenities: ['Piscina', 'Sauna', 'Salão de festas', 'Playground'],
     ),
     const Property(
@@ -133,11 +146,14 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 7800,
       type: PropertyType.commercial,
       brokeragePercent: 7,
-      imageUrls: ['https://images.unsplash.com/photo-1497366216548-37526070297c?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800',
+      ],
       bedrooms: 0,
       bathrooms: 2,
       areaSqm: 200,
-      description: 'Sala comercial ampla no centro histórico, ideal para escritório.',
+      description:
+          'Sala comercial ampla no centro histórico, ideal para escritório.',
       amenities: ['Recepção', 'Estacionamento', 'Segurança 24h'],
     ),
     const Property(
@@ -151,7 +167,9 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 4200,
       type: PropertyType.house,
       brokeragePercent: 10,
-      imageUrls: ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
+      ],
       bedrooms: 3,
       bathrooms: 2,
       areaSqm: 140,
@@ -169,16 +187,19 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 2800,
       type: PropertyType.studio,
       brokeragePercent: 11,
-      imageUrls: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800',
+      ],
       bedrooms: 1,
       bathrooms: 1,
       areaSqm: 55,
-      description: 'Loft com pé direito duplo e estilo industrial contemporâneo.',
+      description:
+          'Loft com pé direito duplo e estilo industrial contemporâneo.',
       amenities: ['Rooftop', 'Lavanderia', 'Pet friendly'],
     ),
     const Property(
       id: '9',
-      title: 'Parque Residence',
+      title: 'Residencial Parque',
       address: 'Av. Ibirapuera, 500',
       city: 'São Paulo',
       state: 'SP',
@@ -187,7 +208,9 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 5800,
       type: PropertyType.apartment,
       brokeragePercent: 8,
-      imageUrls: ['https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800',
+      ],
       bedrooms: 4,
       bathrooms: 3,
       areaSqm: 150,
@@ -196,7 +219,7 @@ class MockPropertyRepository implements PropertyRepository {
     ),
     const Property(
       id: '10',
-      title: 'Compact Living',
+      title: 'Residencial Compacto',
       address: 'Rua Consolação, 1200',
       city: 'São Paulo',
       state: 'SP',
@@ -205,7 +228,9 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 1500,
       type: PropertyType.studio,
       brokeragePercent: 12,
-      imageUrls: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
+      ],
       bedrooms: 1,
       bathrooms: 1,
       areaSqm: 28,
@@ -214,7 +239,7 @@ class MockPropertyRepository implements PropertyRepository {
     ),
     const Property(
       id: '11',
-      title: 'Sunset Penthouse',
+      title: 'Cobertura Pôr do Sol',
       address: 'Rua Haddock Lobo, 800',
       city: 'São Paulo',
       state: 'SP',
@@ -223,16 +248,19 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 8500,
       type: PropertyType.apartment,
       brokeragePercent: 7,
-      imageUrls: ['https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800',
+      ],
       bedrooms: 4,
       bathrooms: 4,
       areaSqm: 220,
-      description: 'Penthouse exclusiva com terraço privativo e vista do pôr do sol.',
+      description:
+          'Penthouse exclusiva com terraço privativo e vista do pôr do sol.',
       amenities: ['Terraço', 'Jacuzzi', 'Adega', 'Home theater', '3 vagas'],
     ),
     const Property(
       id: '12',
-      title: 'Tech Hub Office',
+      title: 'Escritório Tech Hub',
       address: 'Av. Eng. Luís Carlos Berrini, 1000',
       city: 'São Paulo',
       state: 'SP',
@@ -241,17 +269,29 @@ class MockPropertyRepository implements PropertyRepository {
       rentPrice: 12000,
       type: PropertyType.commercial,
       brokeragePercent: 6,
-      imageUrls: ['https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800'],
+      imageUrls: [
+        'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800',
+      ],
       bedrooms: 0,
       bathrooms: 4,
       areaSqm: 350,
-      description: 'Escritório corporativo na região da Berrini com infraestrutura completa.',
-      amenities: ['Heliponto', 'Auditório', 'Copa', 'Segurança 24h', '10 vagas'],
+      description:
+          'Escritório corporativo na região da Berrini com infraestrutura completa.',
+      amenities: [
+        'Heliponto',
+        'Auditório',
+        'Copa',
+        'Segurança 24h',
+        '10 vagas',
+      ],
     ),
   ];
 
   @override
-  Future<List<Property>> getProperties({int page = 0, int pageSize = 10}) async {
+  Future<List<Property>> getProperties({
+    int page = 0,
+    int pageSize = 10,
+  }) async {
     // Simula delay de rede
     await Future.delayed(const Duration(milliseconds: 800));
 
@@ -279,7 +319,8 @@ class MockPropertyRepository implements PropertyRepository {
       if (filter.type != null && p.type != filter.type) return false;
       if (filter.minRent != null && p.rentPrice < filter.minRent!) return false;
       if (filter.maxRent != null && p.rentPrice > filter.maxRent!) return false;
-      if (filter.minBedrooms != null && p.bedrooms < filter.minBedrooms!) return false;
+      if (filter.minBedrooms != null && p.bedrooms < filter.minBedrooms!)
+        return false;
       if (filter.address != null && filter.address!.isNotEmpty) {
         final query = filter.address!.toLowerCase();
         if (!p.address.toLowerCase().contains(query) &&

@@ -6,7 +6,10 @@
       "Bash(powershell -Command:*)",
       "Bash(flutter pub get:*)",
       "Bash(dart analyze:*)",
-      "Bash(ls -la \"d:\\\\git\\\\SafeHouse\\\\assets\"\" 2>&1 || echo \"Assets directory check \")"
+      "Bash(ls -la \"d:\\\\git\\\\SafeHouse\\\\assets\"\" 2>&1 || echo \"Assets directory check \")",
+      "Bash(flutter test:*)",
+      "Bash(flutter clean:*)",
+      "Bash(flutter build:*)"
     ]
   }
 }

@@ -12,8 +12,14 @@ val newBuildDir: Directory =
 rootProject.layout.buildDirectory.value(newBuildDir)
 
 subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
+    // Only redirect build dir for subprojects on the same drive root
+    // to avoid "different roots" errors on Windows with Pub Cache on C:\
+    val subprojectRoot = project.projectDir.toPath().root
+    val buildRoot = newBuildDir.asFile.toPath().root
+    if (subprojectRoot == buildRoot) {
+        val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
+        project.layout.buildDirectory.value(newSubprojectBuildDir)
+    }
 }
 subprojects {
     project.evaluationDependsOn(":app")

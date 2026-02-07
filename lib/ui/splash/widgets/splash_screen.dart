@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import 'package:provider/provider.dart';
 
 import '../../../config/theme/app_colors.dart';
+import '../../auth/view_models/auth_view_model.dart';
 
 /// Splash screen com logo do SafeHouse.
 /// Na v1 é estática; futuramente será animada.
@@ -17,13 +19,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    _navigateNext();
   }
 
-  Future<void> _navigateToHome() async {
+  Future<void> _navigateNext() async {
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
-      context.go('/home');
+      final auth = context.read<AuthViewModel>();
+      if (auth.isAuthenticated) {
+        context.go('/home');
+      } else {
+        context.go('/login');
+      }
     }
   }
 
@@ -35,37 +42,17 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo placeholder — será substituído por asset
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: const Icon(
-                Icons.home_rounded,
-                size: 56,
-                color: AppColors.onPrimary,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'SafeHouse',
-              style: GoogleFonts.poppins(
-                fontSize: 32,
-                fontWeight: FontWeight.w700,
-                color: AppColors.onBackground,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Sua imobiliária com proteção jurídica',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.onBackgroundSecondary,
-              ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(32),
+                  child: Image.asset(
+                    'assets/images/logo-safe-house.png',
+                    width: constraints.maxWidth * 0.7,
+                    fit: BoxFit.contain,
+                  ),
+                );
+              },
             ),
           ],
         ),
