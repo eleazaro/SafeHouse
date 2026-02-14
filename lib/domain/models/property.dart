@@ -5,6 +5,12 @@ enum PropertyType {
   commercial,
 }
 
+enum PropertyStatus {
+  disponivel,
+  reservado,
+  alugado,
+}
+
 class Property {
   final String id;
   final String title;
@@ -15,6 +21,8 @@ class Property {
   final double longitude;
   final double rentPrice;
   final PropertyType type;
+  final PropertyStatus status;
+  final String ownerId;
   final double brokeragePercent;
   final List<String> imageUrls;
   final int bedrooms;
@@ -34,6 +42,8 @@ class Property {
     required this.longitude,
     required this.rentPrice,
     required this.type,
+    this.status = PropertyStatus.disponivel,
+    this.ownerId = '',
     required this.brokeragePercent,
     required this.imageUrls,
     required this.bedrooms,

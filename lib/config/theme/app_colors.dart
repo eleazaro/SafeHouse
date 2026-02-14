@@ -25,6 +25,7 @@ class AppColors {
   static const calendarSelected = Color(0xFF4CAF50);
   static const calendarToday = Color(0xFFFF6B00);
   static const error = Color(0xFFCF6679);
+  static const success = Color(0xFF4CAF50);
   static const divider = Color(0xFF3A3A3A);
   static const shimmer = Color(0xFF333333);
 }

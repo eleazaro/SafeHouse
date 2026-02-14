@@ -2,234 +2,234 @@
 
 ## Visão do Produto
 
-SafeHouse é um aplicativo de imobiliária com diferencial jurídico integrado. O cliente navega por imóveis disponíveis para locação em um feed visual (estilo Instagram), filtra por localização e preferências, e tem acesso direto a serviços jurídicos — cobrindo uma lacuna das imobiliárias tradicionais.
+SafeHouse é um **sistema automatizado e seguro para locação de imóveis** com motor jurídico integrado. Não é um marketplace — é uma plataforma que elimina a dor de cabeça do locatário e do proprietário, automatizando desde a busca até o encerramento do contrato, com proteção jurídica em cada etapa.
+
+**Diferencial**: O Gui (advogado) é o motor jurídico. O app integra serviços legais diretamente no fluxo de locação — cobrança, contrato, vistoria, despejo — tudo dentro do sistema.
 
 **Plataformas**: Android + iOS + Web
 **Arquitetura**: Flutter App Architecture (MVVM + Repository + Services)
-**Backend v1**: Repositório mockado (sem backend real)
+**Backend v1**: Repositório mockado → migrar para Firebase/Supabase no v2
 
 ---
 
-## Fase 0 — Setup & Fundação
+## Dois perfis de usuário
+
+| Perfil | Fluxo |
+|--------|-------|
+| **Locatário** | Busca imóvel → Aceita termos → Reserva → Paga → Mora → Encerra |
+| **Proprietário** | Cadastra imóvel → Aprova vistoria → Acompanha pagamento → Encerra contrato |
+
+## State Machine do Contrato
+
+```
+ANÚNCIO → RESERVA → CONTRATO_ASSINADO → ENTREGA_CHAVES → LOCACAO_ATIVA → ENCERRAMENTO → NOVA_LOCACAO
+                                                              ↓ (condicional)
+                                                         INADIMPLENTE
+```
+
+Eventos automáticos (v2+): pagamento atrasou, vistoria recusada, saída solicitada.
+
+---
+
+## Fase 0 — Setup & Fundação ✅
 
 > Estrutura do projeto, tema e navegação base.
 
-- [ ] Criar projeto Flutter com suporte Android, iOS e Web
-- [ ] Configurar estrutura de pastas seguindo Flutter App Architecture
-  ```
-  lib/
-  ├── config/theme/
-  ├── data/repositories/, services/, models/
-  ├── domain/models/
-  ├── routing/
-  ├── ui/core/widgets/, splash/, auth/, home/, property_detail/, booking/
-  ├── utils/
-  └── main.dart
-  ```
-- [ ] Configurar `pubspec.yaml` com dependências iniciais:
-  - `provider` (DI e state management)
-  - `go_router` (navegação declarativa)
-  - `google_fonts` (Poppins)
-  - `google_sign_in` (autenticação)
-  - `cached_network_image` (cache de imagens)
-  - `shimmer` (skeleton loading)
-- [ ] Implementar `AppColors` e `AppTheme` conforme Design System
-- [ ] Criar Splash Screen (imagem estática da logo, transição para login/home)
-- [ ] Configurar `GoRouter` com rotas: splash → login → home → detalhe → booking
-- [ ] Configurar múltiplos entry points: `main.dart`, `main_development.dart`
+- [x] Criar projeto Flutter com suporte Android, iOS e Web
+- [x] Configurar estrutura de pastas (Flutter App Architecture)
+- [x] Configurar `pubspec.yaml` com dependências iniciais
+- [x] Implementar `AppColors` e `AppTheme` conforme Design System
+- [x] Criar Splash Screen com logo
+- [x] Configurar `GoRouter` com rotas e auth guard
+- [x] Criar `AppStrings` — strings centralizadas (sem hardcode)
 
 ---
 
-## Fase 1 — Autenticação
+## Fase 1 — Autenticação ✅
 
 > Login via Google com fluxo simples.
 
-- [ ] Criar `User` (domain model)
-  ```dart
-  class User {
-    final String id;
-    final String name;
-    final String email;
-    final String? photoUrl;
-  }
-  ```
-- [ ] Criar `AuthService` — wrapper do `google_sign_in`
-- [ ] Criar `AuthRepository` — gerencia estado de autenticação
-  - Mock: login sempre sucede com usuário fake
-  - Real: delega para `AuthService`
-- [ ] Criar `AuthViewModel` (ChangeNotifier)
-  - Estado: `isAuthenticated`, `currentUser`, `isLoading`
-  - Commands: `signInWithGoogle()`, `signOut()`
-- [ ] Criar `LoginScreen`
-  - Logo SafeHouse centralizada
-  - Botão "Continuar com Google" (estilo Material, cores do Design System)
-  - Fundo `background` (#1A1A1A)
-- [ ] Configurar guard de autenticação no router (redireciona para login se não autenticado)
+- [x] Criar `User` (domain model) com id, name, email, photoUrl
+- [x] Criar `AuthService` — wrapper do `google_sign_in`
+- [x] Criar `AuthRepository` (abstract + MockAuthRepository + GoogleAuthRepository)
+- [x] Criar `AuthViewModel` (ChangeNotifier)
+- [x] Criar `LoginScreen` com logo + botão Google
+- [x] Configurar guard de autenticação no router
 
 ---
 
-## Fase 2 — Feed de Imóveis (Home)
+## Fase 2 — Feed de Imóveis (Home) ✅
 
-> Tela principal com listagem de imóveis estilo feed do Instagram.
+> Tela principal com listagem estilo Instagram.
 
-- [ ] Criar `Property` (domain model)
-  ```dart
-  class Property {
-    final String id;
-    final String title;
-    final String address;
-    final String city;
-    final String state;
-    final double latitude;
-    final double longitude;
-    final double rentPrice;
-    final PropertyType type; // apartment, house, studio, commercial
-    final double brokeragePercent;
-    final List<String> imageUrls;
-    final int bedrooms;
-    final int bathrooms;
-    final double areaSqm;
-    final String description;
-    final bool hasLegalSupport; // diferencial SafeHouse
-    final List<String> amenities;
-  }
-  ```
-- [ ] Criar `PropertyRepository` (mock)
-  - Lista de 15-20 imóveis fake com dados realistas
-  - Métodos: `getProperties()`, `getPropertyById()`, `getFilteredProperties()`
-  - Simular delay de 500-1000ms para testar loading states
-- [ ] Criar `HomeViewModel` (ChangeNotifier)
-  - Estado: `properties`, `isLoading`, `activeFilters`, `hasError`
-  - Commands: `loadProperties()`, `applyFilter()`, `clearFilters()`, `refresh()`
-  - Paginação: carregar 10 por vez (scroll infinito)
-- [ ] Criar `SafeHouseAppBar` widget
-  - Avatar do usuário + saudação + ícone de notificação
-- [ ] Criar `FilterChips` widget
-  - Scroll horizontal
-  - Filtros: Todos, Apartamento, Casa, Estúdio, Comercial
-  - Estado ativo/inativo com cores do Design System
-- [ ] Criar `PropertyCard` widget
-  - Imagem com aspect ratio 4:3
-  - Bookmark icon (toggle)
-  - Título + info de brokerage
-  - Botões de telefone e "Book Now"
-  - Hero animation na imagem (para transição ao detalhe)
-- [ ] Criar `HomeScreen`
-  - `SafeHouseAppBar` no topo
-  - Título "Find The Perfect Place"
-  - `FilterChips` horizontal
-  - `ListView.builder` com `PropertyCard` (scroll infinito)
-  - Pull-to-refresh
-  - Skeleton loading (shimmer) enquanto carrega
-  - Fade-in animation nos cards
-- [ ] Implementar `BottomNavigationBar` (Home, Busca, Favoritos, Perfil)
+- [x] Criar `Property` (domain model) com todos os campos
+- [x] Criar `PropertyRepository` (mock com 12 imóveis)
+- [x] Criar `HomeViewModel` (paginação, filtros, scroll infinito)
+- [x] Criar `SafeHouseAppBar` (avatar + saudação + notificação)
+- [x] Criar `FilterChipsBar` (Todos, Apartamento, Casa, Estúdio, Comercial)
+- [x] Criar `PropertyCard` (imagem 4:3, bookmark, hero animation, fade-in)
+- [x] Criar `PropertyCardShimmer` (skeleton loading)
+- [x] Implementar `HomeScreen` completa com RefreshIndicator
+- [x] Implementar `BottomNavigationBar` (Início, Busca, Favoritos, Perfil)
 
 ---
 
-## Fase 3 — Detalhe do Imóvel
+## Fase 3 — Detalhe do Imóvel ✅
 
 > Tela completa de informações do imóvel.
 
-- [ ] Criar `PropertyDetailViewModel` (ChangeNotifier)
-  - Estado: `property`, `isLoading`, `isBookmarked`
-  - Commands: `loadProperty(id)`, `toggleBookmark()`
-- [ ] Criar `PropertyDetailScreen`
-  - Hero image com transição do card
-  - Informações: título, localização, preço, área, quartos, banheiros
-  - Badge de brokerage %
-  - Galeria de fotos (horizontal scroll)
-  - Seção de amenidades (ícones + labels)
-  - Seção "Suporte Jurídico" — badge indicando que o imóvel tem cobertura legal SafeHouse
-  - Seletor de tipo de quarto (Room icons)
-  - Botões: Ligar, Book Now
-  - Bottom bar com "Book an Apartment"
-- [ ] Transição: slide-up ou hero animation vindo do feed
+- [x] Criar `PropertyDetailViewModel` (ChangeNotifier)
+- [x] Criar `PropertyDetailScreen` com hero image, stats, amenidades
+- [x] Badge "Proteção Jurídica SafeHouse"
+- [x] Animações staggered fade-in nas seções
+- [x] Botão "Alugar" no bottom bar
 
 ---
 
-## Fase 4 — Booking (Reserva)
+## Fase 4 — Modelo de Domínio do Contrato 🔲
 
-> Tela de resumo e seleção de datas.
+> Base de dados para o fluxo de locação. Sem UI complexa ainda, mas o modelo precisa existir para o app evoluir.
 
-- [ ] Criar `Booking` (domain model)
+- [ ] Evoluir `User` — adicionar `UserRole` (locatario, proprietario)
   ```dart
-  class Booking {
+  enum UserRole { locatario, proprietario }
+  class User {
+    // ... campos existentes
+    final UserRole role;
+    final String? cpf;
+    final String? phone;
+  }
+  ```
+
+- [ ] Criar `Contract` (domain model) — state machine
+  ```dart
+  enum ContractStatus {
+    anuncio,
+    reserva,
+    contratoAssinado,
+    entregaChaves,
+    locacaoAtiva,
+    inadimplente,
+    encerramento,
+  }
+
+  class Contract {
     final String id;
     final String propertyId;
-    final String userId;
-    final DateTime checkIn;
-    final DateTime checkOut;
-    final BookingStatus status; // pending, confirmed, cancelled
+    final String tenantId;      // locatário
+    final String ownerId;       // proprietário
+    final ContractStatus status;
+    final DateTime startDate;
+    final DateTime endDate;
+    final double monthlyRent;
+    final double deposit;       // caução
+    final DateTime createdAt;
   }
   ```
-- [ ] Criar `BookingRepository` (mock)
-  - Métodos: `createBooking()`, `getUserBookings()`
-  - Salvar em memória
-- [ ] Criar `BookingViewModel` (ChangeNotifier)
-  - Estado: `selectedCheckIn`, `selectedCheckOut`, `isConfirming`
-  - Commands: `selectDates()`, `confirmBooking()`
-- [ ] Criar `BookingCalendar` widget customizado
-  - Calendário mensal com navegação
-  - Seleção de range de datas (check-in/check-out)
-  - Cores: verde para selecionado, laranja para hoje
-- [ ] Criar `BookingSummaryScreen`
-  - Título "Book Summary"
-  - Calendário
-  - Pick-up Date e Return Date (seletores)
-  - Botão "Book Now" (full-width, laranja)
-  - Ícones de ação na bottom bar
+
+- [ ] Criar `ContractRepository` (abstract + mock)
+  - `createContract(Contract)`
+  - `getContractsByUser(userId)`
+  - `updateStatus(contractId, ContractStatus)`
+
+- [ ] Adicionar campo `ownerId` e `status` (disponivel, reservado, alugado) ao `Property`
 
 ---
 
-## Fase 5 — Jurídico (Diferencial)
+## Fase 5 — Fluxo de Locação (Locatário) 🔲
 
-> Placeholder para serviços jurídicos integrados.
+> Caminho do usuário: ver imóvel → aceitar termos → confirmar reserva.
 
-- [ ] Criar `LegalService` (domain model)
-  ```dart
-  class LegalService {
-    final String id;
-    final String title;
-    final String description;
-    final LegalServiceType type; // contract_review, dispute, documentation
-  }
-  ```
-- [ ] Criar `LegalScreen` (placeholder)
-  - Lista de serviços jurídicos disponíveis
-  - Cards com ícone `gavel`, título e descrição
-  - Botão "Solicitar" (disabled na v1, com label "Em breve")
-- [ ] Adicionar badge "Proteção Jurídica SafeHouse" no `PropertyDetailScreen`
-- [ ] Adicionar item no `BottomNavigationBar` ou acessível via perfil
+- [ ] Criar `RentalTermsScreen` — tela de termos de locação
+  - Texto dos termos (scrollable)
+  - Checkbox "Li e aceito os termos de locação"
+  - Botão "Confirmar e Reservar"
+  - Termos redigidos pelo Gui (advogado)
+
+- [ ] Criar `ReservationConfirmScreen` — confirmação da reserva
+  - Resumo do imóvel (foto, título, preço)
+  - Dados do contrato (início, valor mensal, caução)
+  - Indicador de próximos passos (pagamento → contrato → chaves)
+  - Botão "Confirmar Reserva"
+  - Estado de sucesso: "Reserva confirmada! Entraremos em contato."
+
+- [ ] Criar `RentalViewModel` (ChangeNotifier)
+  - Estado: `termsAccepted`, `isConfirming`, `reservationComplete`
+  - Commands: `acceptTerms()`, `confirmReservation(propertyId)`
+
+- [ ] Atualizar fluxo no `PropertyDetailScreen`
+  - Botão "Alugar" → navega para `RentalTermsScreen`
+
+- [ ] Adicionar rotas: `/property/:id/terms`, `/property/:id/confirm`
 
 ---
 
-## Fase 6 — Filtros Avançados
+## Fase 6 — Filtros Avançados 🔲
 
-> Sistema completo de filtragem de imóveis.
+> Busca por endereço, localização GPS e faixa de preço.
 
-- [ ] Criar `PropertyFilter` (domain model)
-  ```dart
-  class PropertyFilter {
-    final String? address;
-    final double? latitude;
-    final double? longitude;
-    final double? radiusKm;
-    final PropertyType? type;
-    final double? minRent;
-    final double? maxRent;
-    final int? minBedrooms;
-  }
-  ```
 - [ ] Criar `FilterBottomSheet` widget
-  - Filtro por endereço (text input com autocomplete)
-  - Filtro por "Minha Localização" + slider de range em KM
+  - Campo de busca por endereço (text input)
   - Filtro por tipo de imóvel (chips de seleção múltipla)
-  - Filtro por faixa de valor (range slider)
+  - Filtro por faixa de valor (range slider R$ min — R$ max)
   - Botão "Aplicar Filtros" + "Limpar"
+
 - [ ] Integrar filtros com `HomeViewModel`
-  - `applyFilter(PropertyFilter)` re-filtra a lista
+  - `applyAdvancedFilter(PropertyFilter)` usa `getFilteredProperties`
   - Indicador visual de filtros ativos na `HomeScreen`
-- [ ] Usar `geolocator` package para obter localização do dispositivo
+
+- [ ] Botão de filtro no `SafeHouseAppBar` ou na aba "Busca"
+
+> **GPS (v2)**: usar `geolocator` para "Minha Localização" + slider de raio em KM. Depende de permissões e é mais complexo — deixar para v2.
+
+---
+
+## Fase 7 — Tela do Proprietário (Básica) 🔲
+
+> Visão mínima do proprietário. Apenas visualização, sem cadastro de imóvel (v1 é mock).
+
+- [ ] Criar `OwnerDashboardScreen`
+  - Lista dos seus imóveis com status (disponível, reservado, alugado)
+  - Card simplificado com foto, título, status, valor
+
+- [ ] Criar `OwnerDashboardViewModel`
+  - `getOwnerProperties(ownerId)`
+
+- [ ] Permitir troca de perfil (locatário ↔ proprietário) na tela de Perfil
+
+> **Cadastro de imóvel pelo proprietário (v2)**: formulário completo com fotos, endereço, preço. Requer backend real com upload de imagens.
+
+---
+
+## Fase 8 — Perfil e Configurações 🔲
+
+> Tela do perfil do usuário.
+
+- [ ] Criar `ProfileScreen`
+  - Avatar, nome, email
+  - Tipo de perfil (Locatário / Proprietário)
+  - Meus contratos (lista com status)
+  - Botão de logout
+  - Versão do app
+
+- [ ] Conectar aba "Perfil" do BottomNavigationBar
+
+---
+
+## O que NÃO entra na v1 (visão do Gui para v2/v3)
+
+| Feature | Por quê não agora | Quando |
+|---------|-------------------|--------|
+| Pagamento (Pix/cartão) | Precisa de gateway + backend | v2 |
+| Contrato digital com assinatura | Precisa de integração (Clicksign/DocuSign) | v2 |
+| Vistoria com fotos | Precisa de backend com upload | v2 |
+| Cobrança automatizada | Precisa de gateway de pagamento | v2 |
+| Motor jurídico (inadimplência → execução → despejo) | Backend + integração com escritório | v3 |
+| Seguro integrado | Parceria com seguradora | v3 |
+| Troca de imóvel durante locação | Feature avançada | v3 |
+| Notificações push de eventos | Firebase Cloud Messaging | v2 |
+| Agendamento de mudança | Parceria com transportadora | v3+ |
+| Banner / Propaganda | Precisa de conteúdo e parceiros | v2 |
 
 ---
 
@@ -239,33 +239,33 @@ SafeHouse é um aplicativo de imobiliária com diferencial jurídico integrado. 
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.1.0
-  go_router: ^14.0.0
-  google_fonts: ^6.2.0
+  provider: ^6.1.2
+  go_router: ^14.8.1
+  google_fonts: ^6.2.1
   google_sign_in: ^6.2.0
-  cached_network_image: ^3.3.0
+  cached_network_image: ^3.4.1
   shimmer: ^3.0.0
-  intl: ^0.19.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
-  mockito: ^5.4.0
-  build_runner: ^2.4.0
+  flutter_lints: ^6.0.0
 ```
 
 ---
 
 ## Critérios de Aceite da v1
 
-1. Usuário consegue fazer login com Google
-2. Feed mostra imóveis com scroll infinito e skeleton loading
-3. Filtros básicos funcionam (tipo de imóvel, faixa de preço)
-4. Tela de detalhe mostra todas as informações do imóvel
-5. Calendário de booking permite selecionar datas
-6. Seção jurídica está visível como placeholder
-7. App funciona em Android, iOS e Web
-8. Design consistente com o Design System definido
-9. Transições e animações fluidas (hero, fade-in, pull-to-refresh)
-10. `flutter analyze` sem warnings
+1. ✅ Usuário faz login com Google
+2. ✅ Feed mostra imóveis com scroll infinito e skeleton loading
+3. ✅ Filtros básicos por tipo de imóvel funcionam
+4. ✅ Tela de detalhe mostra todas as informações + badge jurídico
+5. 🔲 Fluxo de locação: aceitar termos → confirmar reserva
+6. 🔲 Modelo de contrato com state machine implementado
+7. 🔲 Filtros avançados (endereço, preço)
+8. 🔲 Tela de perfil com logout e informações
+9. ✅ Design consistente com Design System (dark + laranja)
+10. ✅ Transições e animações fluidas
+11. ✅ Todas as strings em português centralizadas
+12. ✅ `dart analyze` sem warnings
